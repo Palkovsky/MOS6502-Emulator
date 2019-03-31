@@ -1,42 +1,46 @@
 package cpu
 
+import spire.math.{UByte, UShort}
+
 import scala.collection.mutable
 
 abstract class SegmentType()
 case object CODE_SEGMENT extends SegmentType
 case object DATA_SEGMENT extends SegmentType
 
-case class MemorySegment(segmentType: SegmentType, start: Int, end: Int){
-  def size: Int = end - start + 1
+case class MemorySegment(segmentType: SegmentType, start: UShort, end: UShort){
+  def size: UShort = end - start + UShort(1)
 }
 
 class MemoryMap {
-  private val memMap: mutable.Map[MemorySegment, Array[Byte]] = mutable.Map.empty
+  private val memMap: mutable.Map[MemorySegment, Array[UByte]] = mutable.Map.empty
 
-  def mapMemory(segmentType: SegmentType, writable: Array[Byte], start: Int): Unit = {
-    if(start < 0) throw new IllegalArgumentException("Only positive mounting points.")
+  def mapMemory(segmentType: SegmentType, writable: Array[UByte], start: UShort): Unit = {
     if(writable.isEmpty) throw new IllegalArgumentException("Unable to map empty sequence.")
-    val region = MemorySegment(segmentType, start, start + writable.length - 1)
+    val region = MemorySegment(segmentType, start, start + UShort(writable.length) - UShort(1))
     memMap.put(region, writable)
   }
 
-  def writeTo(addr: Int, value: Byte): Unit = findByAddr(addr) match {
+  def writeTo(addr: UShort, value: UByte): Unit = findByAddr(addr) match {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
       if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: $addr")
-      bytes.update(relativeAddr, value)
+      bytes.update(relativeAddr.toInt, value)
   }
 
-  def readFrom(addr: Int): Byte = findByAddr(addr) match {
+  def readFrom(addr: UShort): UByte = findByAddr(addr) match {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
       if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: $addr")
-      bytes(relativeAddr)
+      bytes(relativeAddr.toInt)
   }
 
-  private def findByAddr(addr: Int): (MemorySegment, Array[Byte]) = {
+  def readFrom(addr: UByte): UByte = readFrom(UShort(addr.toInt))
+
+  private def findByAddr(addr: UShort): (MemorySegment, Array[UByte]) = {
     val filtered = memMap.filterKeys(region => addr >= region.start && addr <= region.end)
-    if (filtered.isEmpty) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: ${addr}")
+    if (filtered.isEmpty) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: ${addr.signed.toHexString}")
     filtered.head
   }
+
 }
