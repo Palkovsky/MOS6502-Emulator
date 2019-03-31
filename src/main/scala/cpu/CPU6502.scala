@@ -20,7 +20,7 @@ class CPU6502 private(val memory: MemoryMap){
         case Some(BRK)         => return
         case Some(instruction) =>
           val args: Seq[UByte] = for(i <- 1 until instruction.size) yield memory.readFrom(registers.PC + UShort(i))
-          println(s"Executin ${instruction.opcode} Args: $args")
+          println(s"Executing ${instruction.opcode.toInt.toHexString} Args: $args")
           instruction.execute(memory, registers, args:_*)
           cycles       = cycles + instruction.cycles
           registers.PC = registers.PC + UShort(instruction.size)
