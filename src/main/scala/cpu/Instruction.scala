@@ -9,6 +9,7 @@ object InstructionSet {
   val instructions: Seq[Instruction] = List(
     ADC_Imm, ADC_ZP, ADC_ZP_X, ADC_ABS, ADC_ABS_X, ADC_ABS_Y, ADC_Indirect_X, ADC_Indirect_Y,
     AND_Imm, AND_ZP, AND_ZP_X, AND_ABS, AND_ABS_X, AND_ABS_Y, AND_Indirect_X, AND_Indirect_Y,
+    ASL_Acc, ASL_ZP, ASL_ZP_X, ASL_ABS, ASL_ABS_X,
     BRK,
     BCC, BCS, BNE, BEQ, BPL, BMI, BVC, BVS
   )

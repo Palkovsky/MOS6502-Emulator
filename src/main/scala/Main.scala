@@ -15,19 +15,12 @@ object Main extends App {
 
   // Code segment
   val code: Array[UByte] = Array.fill(0x80)(UByte(0x00))
-  code(0x00) = UByte(0x69) // ADC imm8
-  code(0x01) = UByte(0x79) // imm8 = 0x79
-  code(0x02) = UByte(0x75) // ADC ZP_X
-  code(0x03) = UByte(0x20) // ZP-addr
-  code(0x04) = UByte(0x25) // AND ZP
-  code(0x05) = UByte(0x22)
-
-
-  code(0x06) = UByte(0xD0) // if ZF == 1
-  code(0x07) = UByte(0x08) // GO TO 0x10
-
-  code(0x10) = UByte(0x69) // ADC imm8
-  code(0x11) = UByte(0x10) // imm8 = 0x10
+  code(0x00) = UByte(0x1E) // ASL ABS_X
+  code(0x01) = UByte(0x20) // Mem addr:
+  code(0x02) = UByte(0x00) // 0x0020
+  code(0x03) = UByte(0x65) // Add ZP
+  code(0x04) = UByte(0x21) // addr: 0x21
+  code(0x05) = UByte(0x0A) // ASL Acc
 
   memoryMap.mapMemory(CODE_SEGMENT, code, code_ptr)
 

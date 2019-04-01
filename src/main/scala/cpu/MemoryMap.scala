@@ -28,6 +28,8 @@ class MemoryMap {
       bytes.update(relativeAddr.toInt, value)
   }
 
+  def writeTo(addr: UByte, value: UByte): Unit = writeTo(UShort(addr.toInt), value)
+
   def readFrom(addr: UShort): UByte = findByAddr(addr) match {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
