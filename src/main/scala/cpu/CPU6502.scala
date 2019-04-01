@@ -1,5 +1,6 @@
 package cpu
 
+import cpu.instructions.BRK
 import spire.math.{UByte, UShort}
 
 object CPU6502{
