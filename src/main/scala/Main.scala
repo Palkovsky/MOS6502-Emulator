@@ -9,18 +9,16 @@ object Main extends App {
 
   // 128 bytes of RAM
   val ram: Array[UByte] = Array.fill(0x80)(UByte(0x00))
-  ram(0x21) = UByte(0x60)
+  ram(0x21) = UByte(0x30)
   ram(0x22) = UByte(0x00)
   memoryMap.mapMemory(DATA_SEGMENT, ram, data_ptr)
 
   // Code segment
   val code: Array[UByte] = Array.fill(0x80)(UByte(0x00))
-  code(0x00) = UByte(0x1E) // ASL ABS_X
-  code(0x01) = UByte(0x20) // Mem addr:
-  code(0x02) = UByte(0x00) // 0x0020
-  code(0x03) = UByte(0x65) // Add ZP
-  code(0x04) = UByte(0x21) // addr: 0x21
-  code(0x05) = UByte(0x0A) // ASL Acc
+  code(0x00) = UByte(0)
+
+  code(0x0A) = UByte(0x69)
+  code(0x0B) = UByte(0x01)
 
   memoryMap.mapMemory(CODE_SEGMENT, code, code_ptr)
 

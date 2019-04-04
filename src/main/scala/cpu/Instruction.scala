@@ -11,7 +11,11 @@ object InstructionSet {
     AND_Imm, AND_ZP, AND_ZP_X, AND_ABS, AND_ABS_X, AND_ABS_Y, AND_Indirect_X, AND_Indirect_Y,
     ASL_Acc, ASL_ZP, ASL_ZP_X, ASL_ABS, ASL_ABS_X,
     BRK,
-    BCC, BCS, BNE, BEQ, BPL, BMI, BVC, BVS
+    BCC, BCS, BNE, BEQ, BPL, BMI, BVC, BVS,
+    CLS, CLD, CLV, CLD,
+    CMP_Imm, CMP_ZP, CMP_ZP_X, CMP_ABS, CMP_ABS_X, CMP_ABS_Y, CMP_Indirect_X, CMP_Indirect_Y,
+    CPX_Imm, CPX_ZP, CPX_ABS,
+    CPY_Imm, CPY_ZP, CPY_ABS
   )
 
   val instructionsMap: Map[UByte, Instruction] = (instructions.map(inst => inst.opcode) zip instructions).toMap

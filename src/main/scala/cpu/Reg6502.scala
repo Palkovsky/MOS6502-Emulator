@@ -21,31 +21,40 @@ class Reg6502 private(){
   var OF: Boolean = false
   var NF: Boolean = false
 
-  def addA(value: UByte): Unit = {
+  // Performs ADC
+  def performADC(value: UByte): Unit = {
     val aSign: Boolean = A.signed > 0
     val valSign: Boolean = value.signed > 0
     val resSign: Boolean = (A+value).signed > 0
-
+    OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
     CF = value.toInt + A.toInt > 255
+
     A = A + value
-    OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
     updateZN(A)
   }
 
-  def subA(value: UByte): Unit = {
+  // Performs SBC
+  def performSBC(value: UByte): Unit = {
     val aSign: Boolean = A.signed > 0
     val valSign: Boolean = value.signed > 0
     val resSign: Boolean = (A+value).signed > 0
-
-    CF = A.toInt - value.toInt < 0
-    A = A - value
     OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
+    CF = A.toInt - value.toInt < 0
+
+    A = A - value
     updateZN(A)
   }
 
+  // Sets status Zero and Negative flag based on passed value
   def updateZN(v: UByte): Unit = {
     ZF = v.signed == 0
     NF = v.signed < 0
+  }
+
+  // Sets status flag for CMP, CPX, CPY operation
+  def updateCMP(valA: UByte, valB: UByte): Unit = {
+    CF = valA >= valB
+    updateZN(valA - valB)
   }
 
   override def toString: String = {
