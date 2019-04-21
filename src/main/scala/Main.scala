@@ -15,10 +15,9 @@ object Main extends App {
 
   // Code segment
   val code: Array[UByte] = Array.fill(0x80)(UByte(0x00))
-  code(0x00) = UByte(0)
-
-  code(0x0A) = UByte(0x69)
-  code(0x0B) = UByte(0x01)
+  code(0x00) = UByte(0xA9)
+  code(0x01) = UByte(0x80)
+  //code(0x02) = UByte(0x2A)
 
   memoryMap.mapMemory(CODE_SEGMENT, code, code_ptr)
 

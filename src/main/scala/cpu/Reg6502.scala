@@ -37,7 +37,7 @@ class Reg6502 private(){
   def performSBC(value: UByte): Unit = {
     val aSign: Boolean = A.signed > 0
     val valSign: Boolean = value.signed > 0
-    val resSign: Boolean = (A+value).signed > 0
+    val resSign: Boolean = (A-value).signed > 0
     OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
     CF = A.toInt - value.toInt < 0
 
@@ -72,7 +72,7 @@ class Reg6502 private(){
     status
   }
 
-  def updateStatus(status: UByte) = {
+  def updateStatus(status: UByte): Unit = {
     val getBit = (b: UByte, idx: Int) => (b & (UByte(1) << idx)) == (UByte(1) << idx)
     NF = getBit(status, 7)
     OF = getBit(status, 6)

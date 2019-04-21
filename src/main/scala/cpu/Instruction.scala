@@ -8,8 +8,12 @@ class InvalidOpcodeException(msg: String) extends Exception(msg)
 object InstructionSet {
   val instructions: Seq[Instruction] = List(
     ADC_Imm, ADC_ZP, ADC_ZP_X, ADC_ABS, ADC_ABS_X, ADC_ABS_Y, ADC_Indirect_X, ADC_Indirect_Y,
+    SBC_Imm, SBC_ZP, SBC_ZP_X, SBC_ABS, SBC_ABS_X, SBC_ABS_Y, SBC_Indirect_X, SBC_Indirect_Y,
     AND_Imm, AND_ZP, AND_ZP_X, AND_ABS, AND_ABS_X, AND_ABS_Y, AND_Indirect_X, AND_Indirect_Y,
     ASL_Acc, ASL_ZP, ASL_ZP_X, ASL_ABS, ASL_ABS_X,
+    LSR_Acc, LSR_ZP, LSR_ZP_X, LSR_ABS, LSR_ABS_X,
+    ROL_Acc, ROL_ZP, ROL_ZP_X, ROL_ABS, ROL_ABS_X,
+    ROR_Acc, ROR_ZP, ROR_ZP_X, ROR_ABS, ROR_ABS_X,
     BRK,
     BCC, BCS, BNE, BEQ, BPL, BMI, BVC, BVS,
     CLS, CLD, CLV, CLD,
