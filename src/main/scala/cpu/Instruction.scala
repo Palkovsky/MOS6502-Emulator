@@ -24,7 +24,10 @@ object InstructionSet {
     JSR, RTS,
     PHA, PLA, PHP,
     NOP,
-    TAX, TXA, TAY, TYA, TXS, TSX
+    TAX, TXA, TAY, TYA, TXS, TSX,
+    STA_ZP, STA_ZP_X, STA_ABS, STA_ABS_X, STA_ABS_Y, STA_Indirect_X, STA_Indirect_Y,
+    STX_ZP, STX_ZP_Y, STX_ABS,
+    STY_ZP, STY_ZP_Y, STY_ABS
   )
 
   val instructionsMap: Map[UByte, Instruction] = (instructions.map(inst => inst.opcode) zip instructions).toMap
