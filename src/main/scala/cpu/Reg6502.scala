@@ -57,6 +57,32 @@ class Reg6502 private(){
     updateZN(valA - valB)
   }
 
+  // Returns status register
+  // Structure: NV_BDIZC
+  def status(): UByte = {
+    var status: UByte = UByte(0)
+    val boolToByte = (b: Boolean) => UByte(if (b) 1 else 0)
+    status |= boolToByte(NF) << 7
+    status |= boolToByte(OF) << 6
+    status |= boolToByte(BC) << 4
+    status |= boolToByte(DM) << 3
+    status |= boolToByte(ID) << 2
+    status |= boolToByte(ZF) << 1
+    status |= boolToByte(CF) << 0
+    status
+  }
+
+  def updateStatus(status: UByte) = {
+    val getBit = (b: UByte, idx: Int) => (b & (UByte(1) << idx)) == (UByte(1) << idx)
+    NF = getBit(status, 7)
+    OF = getBit(status, 6)
+    BC = getBit(status, 4)
+    DM = getBit(status, 3)
+    ID = getBit(status, 2)
+    ZF = getBit(status, 1)
+    CF = getBit(status, 0)
+  }
+
   override def toString: String = {
     val flags = s"CF: $CF, ZF: $ZF, ID: $ID, DM: $DM, BC: $BC, OF: $OF, NF: $NF"
     s"X: 0x${X.toInt.toHexString}, Y: 0x${Y.toInt.toHexString}, A: 0x${A.toInt.toHexString}, PC: 0x${PC.toInt.toHexString}, SP: 0x${SP.toInt.toHexString}, $flags"

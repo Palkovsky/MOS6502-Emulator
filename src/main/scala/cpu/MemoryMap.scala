@@ -44,5 +44,4 @@ class MemoryMap {
     if (filtered.isEmpty) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: ${addr.signed.toHexString}")
     filtered.head
   }
-
 }

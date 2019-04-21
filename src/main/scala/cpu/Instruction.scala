@@ -13,12 +13,18 @@ object InstructionSet {
     BRK,
     BCC, BCS, BNE, BEQ, BPL, BMI, BVC, BVS,
     CLS, CLD, CLV, CLD,
+    SEI, SED, SEC,
     CMP_Imm, CMP_ZP, CMP_ZP_X, CMP_ABS, CMP_ABS_X, CMP_ABS_Y, CMP_Indirect_X, CMP_Indirect_Y,
     CPX_Imm, CPX_ZP, CPX_ABS,
     CPY_Imm, CPY_ZP, CPY_ABS,
     DEC_ZP, DEC_ZP_X, DEC_ABS, DEC_ABS_X, DEX, DEY,
     INC_ZP, INC_ZP_X, INC_ABS, INC_ABS_X, INX, INY,
-    EOR_Imm, EOR_ZP, EOR_ZP_X, EOR_ABS, EOR_ABS_X, EOR_ABS_Y, EOR_Indirect_X, EOR_Indirect_Y
+    EOR_Imm, EOR_ZP, EOR_ZP_X, EOR_ABS, EOR_ABS_X, EOR_ABS_Y, EOR_Indirect_X, EOR_Indirect_Y,
+    JMP_ABS, JMP_Indirect,
+    JSR, RTS,
+    PHA, PLA, PHP,
+    NOP,
+    TAX, TXA, TAY, TYA, TXS, TSX
   )
 
   val instructionsMap: Map[UByte, Instruction] = (instructions.map(inst => inst.opcode) zip instructions).toMap

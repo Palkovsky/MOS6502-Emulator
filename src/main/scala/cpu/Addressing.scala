@@ -3,7 +3,7 @@ package cpu
 import spire.math.{UByte, UShort}
 
 object AddressingType extends Enumeration {
-  val ZP, ZP_X, ZP_Y, ABS, ABS_X, ABS_Y, INDIRECT_X, INDIRECT_Y = Value
+  val ZP, ZP_X, ZP_Y, ABS, ABS_X, ABS_Y, INDIRECT, INDIRECT_X, INDIRECT_Y = Value
 }
 
 object Addressing {

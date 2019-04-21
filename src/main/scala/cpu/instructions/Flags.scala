@@ -18,3 +18,15 @@ object CLI extends Instruction(UByte(0x58), 1, 2){
 object CLV extends Instruction(UByte(0xB8), 1, 2){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = reg.OF = false
 }
+
+object SEC extends Instruction(UByte(0x38), 1, 2){
+  override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = reg.CF = true
+}
+
+object SED extends Instruction(UByte(0xF8), 1, 2){
+  override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = reg.DM = true
+}
+
+object SEI extends Instruction(UByte(0x78), 1, 2){
+  override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = reg.ID = true
+}
