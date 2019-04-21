@@ -5,8 +5,9 @@ import spire.math.{UByte, UShort}
 import scala.collection.mutable
 
 abstract class SegmentType()
+case object IO_SEGMENT extends SegmentType
 case object CODE_SEGMENT extends SegmentType
-case object DATA_SEGMENT extends SegmentType
+case object RAM_SEGMENT extends SegmentType
 
 case class MemorySegment(segmentType: SegmentType, start: UShort, end: UShort){
   def size: UShort = end - start + UShort(1)

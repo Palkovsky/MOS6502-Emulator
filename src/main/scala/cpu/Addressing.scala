@@ -35,7 +35,7 @@ object Addressing {
       memory.readFrom(addr)
   }
 
-  def write(t: AddressingType.Value, memory: MemoryMap, reg: Reg6502, args: Seq[UByte], value: UByte):Unit = t match {
+  def write(t: AddressingType.Value, memory: MemoryMap, reg: Reg6502, args: Seq[UByte], value: UByte): Unit = t match {
     case AddressingType.ZP => memory.writeTo(args.head, value)
     case AddressingType.ZP_X => memory.writeTo(args.head + reg.X, value)
     case AddressingType.ZP_Y => memory.writeTo(args.head + reg.Y, value)

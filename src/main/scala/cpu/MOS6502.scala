@@ -3,12 +3,15 @@ package cpu
 import cpu.instructions.BRK
 import spire.math.{UByte, UShort}
 
-object CPU6502{
-  def apply(memory: MemoryMap) = new CPU6502(memory)
+object MOS6502{
+  def apply(memory: MemoryMap, codePtr: UShort) = new MOS6502(memory, codePtr)
 }
 
-class CPU6502 private(val memory: MemoryMap){
+class MOS6502 private(val memory: MemoryMap, val codePtr: UShort) extends Runnable{
+
   val registers: Reg6502 = Reg6502()
+  registers.PC = codePtr
+
   private var cycles: Long = 0
 
   def run(): Unit = {
