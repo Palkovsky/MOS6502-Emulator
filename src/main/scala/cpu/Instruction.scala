@@ -19,15 +19,19 @@ object InstructionSet {
     CPY_Imm, CPY_ZP, CPY_ABS,
     DEC_ZP, DEC_ZP_X, DEC_ABS, DEC_ABS_X, DEX, DEY,
     INC_ZP, INC_ZP_X, INC_ABS, INC_ABS_X, INX, INY,
+    ORA_Imm, ORA_ZP, ORA_ZP_X, ORA_ABS, ORA_ABS_X, ORA_ABS_Y, ORA_Indirect_X, ORA_Indirect_Y,
     EOR_Imm, EOR_ZP, EOR_ZP_X, EOR_ABS, EOR_ABS_X, EOR_ABS_Y, EOR_Indirect_X, EOR_Indirect_Y,
     JMP_ABS, JMP_Indirect,
-    JSR, RTS,
+    JSR, RTS, RTI,
     PHA, PLA, PHP,
     NOP,
     TAX, TXA, TAY, TYA, TXS, TSX,
+    LDA_Imm, LDA_ZP, LDA_ZP_X, LDA_ABS, LDA_ABS_X, LDA_ABS_Y, LDA_Indirect_X, LDA_Indirect_Y,
+    LDX_Imm, LDX_ZP, LDX_ZP_Y, LDX_ABS, LDX_ABS_Y,
+    LDY_Imm, LDY_ZP, LDY_ZP_X, LDY_ABS, LDY_ABS_X,
     STA_ZP, STA_ZP_X, STA_ABS, STA_ABS_X, STA_ABS_Y, STA_Indirect_X, STA_Indirect_Y,
     STX_ZP, STX_ZP_Y, STX_ABS,
-    STY_ZP, STY_ZP_Y, STY_ABS
+    STY_ZP, STY_ZP_X, STY_ABS
   )
 
   val instructionsMap: Map[UByte, Instruction] = (instructions.map(inst => inst.opcode) zip instructions).toMap

@@ -31,7 +31,25 @@ object RTS extends Instruction(UByte(0x60), 1, 6){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
     val retLower = memory.readFrom(reg.SP + UByte(1))
     val retUpper = memory.readFrom(reg.SP + UByte(2))
+
     reg.SP += UByte(2)
+
+    val retAddr: UShort = (UShort(retUpper.toInt) << 8) + UShort(retLower.toInt)
+    reg.PC = retAddr
+  }
+}
+
+/**
+  * RTI - Return from interrupt
+  */
+object RTI extends Instruction(UByte(0x40), 1, 6){
+  override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
+    val status = memory.readFrom(reg.SP + UByte(1))
+    val retLower = memory.readFrom(reg.SP + UByte(2))
+    val retUpper = memory.readFrom(reg.SP + UByte(3))
+
+    reg.SP += UByte(3)
+    reg.updateStatus(status)
 
     val retAddr: UShort = (UShort(retUpper.toInt) << 8) + UShort(retLower.toInt)
     reg.PC = retAddr

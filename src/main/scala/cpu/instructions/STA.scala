@@ -67,7 +67,7 @@ object STY_ZP extends Instruction(UByte(0x84), 2, 3){
     Addressing.write(AddressingType.ZP, memory, reg, args, reg.Y)
 }
 
-object STY_ZP_Y extends Instruction(UByte(0x94), 2, 4){
+object STY_ZP_X extends Instruction(UByte(0x94), 2, 4){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit =
     Addressing.write(AddressingType.ZP_X, memory, reg, args, reg.Y)
 }
