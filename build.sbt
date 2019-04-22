@@ -1,4 +1,4 @@
-name := "A26Emu"
+name := "MOS6502-Emulator"
 
 version := "0.1"
 

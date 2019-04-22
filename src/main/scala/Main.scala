@@ -13,7 +13,7 @@ import spire.math.{UByte, UShort}
 
 object Main extends App {
   if(args.length != 1)
-    throw new IllegalArgumentException("Usage: . [code_path]")
+    throw new IllegalArgumentException("Usage: 6502 [code_path]")
 
   val path: String = args(0)
   val code: Array[UByte] = Files.readAllBytes(Paths.get(path)).map(byte => UByte(byte))
