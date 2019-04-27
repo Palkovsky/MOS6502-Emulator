@@ -9,6 +9,9 @@ import spire.math.{UByte, UShort}
  * 0x0000-0x00FF - RAM(256 bytes)
  * 0x0100-Ox0FFF - I/O REGISTERS
  * 0x1000-0xFFFF - Code segment
+ * 0xFFFA-0xFFFB - NMI IV
+ * 0xFFFC-0xFFFD - RST IV
+ * 0xFFFE-0xFFFF - IRQ/BRK IV
  */
 
 object Main extends App {
@@ -17,8 +20,6 @@ object Main extends App {
 
   val path: String = args(0)
   val code: Array[UByte] = Files.readAllBytes(Paths.get(path)).map(byte => UByte(byte))
-  if(code.length > 0xEFFF)
-    throw new IllegalArgumentException("Program won't fit in 16-bit address space!")
 
   val memoryMap = new MemoryMap()
   val ramBasePtr: UShort = UShort(0x0000)
@@ -31,6 +32,9 @@ object Main extends App {
   // Code segment
   memoryMap.mapMemory(CODE_SEGMENT, code, codeBasePtr)
 
+  // IVT - IRQ/BRK
+  memoryMap.mapMemory(CODE_SEGMENT, Array[UByte](UByte(0x00), UByte(0x20)), UShort(0xFFFE))
+
   // Terminal device
   val tty: Terminal = Terminal()
   memoryMap.mapMemory(IO_SEGMENT, tty.ports, UShort(0x0100))
@@ -41,7 +45,25 @@ object Main extends App {
 
   val cpu = MOS6502(memoryMap, codeBasePtr)
   val cpuThread = new Thread(cpu)
+  cpuThread.setDaemon(true)
   cpuThread.start()
-  cpuThread.join(1*1000)
-  Thread.sleep(100)
+
+  Thread.sleep(1000)
 }
+
+/*
+  ========== STACK INITIALIZATION =========
+  code(0) = UByte(0xA2) // LDX Imm
+  code(1) = UByte(0xFF)
+  code(2) = UByte(0x9A) // TXS == X=>SP
+  code(3) = UByte(0x00) // BRK
+
+  ========== READING FROM TERMINAL AND OUTPUTTING ==========
+  memoryMap.writeTo(UShort(0x2000), UByte(0xAD)) // LDA 0x0101
+  memoryMap.writeTo(UShort(0x2001), UByte(0x01))
+  memoryMap.writeTo(UShort(0x2002), UByte(0x01))
+  memoryMap.writeTo(UShort(0x2003), UByte(0x8D)) // STA 0x0100
+  memoryMap.writeTo(UShort(0x2004), UByte(0x00))
+  memoryMap.writeTo(UShort(0x2005), UByte(0x01))
+  memoryMap.writeTo(UShort(0x2006), UByte(0x40)) // Return from interrupt
+ */

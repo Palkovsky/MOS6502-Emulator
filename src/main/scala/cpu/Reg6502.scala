@@ -83,6 +83,15 @@ class Reg6502 private(){
     CF = getBit(status, 0)
   }
 
+  def reset(): Unit = {
+    X = UByte(0x00)
+    Y = UByte(0x00)
+    A = UByte(0x00)
+    SP = UByte(0x00)
+    PC = UShort(0x0000)
+    updateStatus(UByte(0x00))
+  }
+
   override def toString: String = {
     val flags = s"CF: $CF, ZF: $ZF, ID: $ID, DM: $DM, BC: $BC, OF: $OF, NF: $NF"
     s"X: 0x${X.toInt.toHexString}, Y: 0x${Y.toInt.toHexString}, A: 0x${A.toInt.toHexString}, PC: 0x${PC.toInt.toHexString}, SP: 0x${SP.toInt.toHexString}, $flags"

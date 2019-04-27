@@ -25,7 +25,7 @@ class MemoryMap {
   def writeTo(addr: UShort, value: UByte): Unit = findByAddr(addr) match {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
-      if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: $addr")
+      if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: 0x${addr.toInt.toHexString}")
       bytes.update(relativeAddr.toInt, value)
   }
 
@@ -34,15 +34,21 @@ class MemoryMap {
   def readFrom(addr: UShort): UByte = findByAddr(addr) match {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
-      if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: $addr")
+      if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: 0x${addr.toInt.toHexString}")
       bytes(relativeAddr.toInt)
   }
 
   def readFrom(addr: UByte): UByte = readFrom(UShort(addr.toInt))
 
+  def dump(from: UShort, to: UShort): Array[UByte] = {
+    if(to < from) throw new IllegalArgumentException("Second address must be greater than first.")
+    val dump: Seq[UByte] = for(i <- 0 until (to-from).toInt) yield readFrom(from + UShort(i))
+    dump.toArray
+  }
+
   private def findByAddr(addr: UShort): (MemorySegment, Array[UByte]) = {
     val filtered = memMap.filterKeys(region => addr >= region.start && addr <= region.end)
-    if (filtered.isEmpty) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: ${addr.signed.toHexString}")
+    if (filtered.isEmpty) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: 0x${addr.toInt.toHexString}")
     filtered.head
   }
 }
