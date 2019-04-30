@@ -23,11 +23,13 @@ class Reg6502 private(){
 
   // Performs ADC
   def performADC(value: UByte): Unit = {
+    val carry: UByte = if (CF) UByte(1) else UByte(0)
     val aSign: Boolean = A.signed > 0
     val valSign: Boolean = value.signed > 0
-    val resSign: Boolean = (A+value).signed > 0
+    val resSign: Boolean = (A + value + carry).signed > 0
+
     OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
-    CF = value.toInt + A.toInt > 255
+    CF = (value.toInt + A.toInt + carry.toInt) > 255
 
     A = A + value
     updateZN(A)
@@ -35,11 +37,13 @@ class Reg6502 private(){
 
   // Performs SBC
   def performSBC(value: UByte): Unit = {
+    val carry: UByte = if (CF) UByte(0) else UByte(1)
     val aSign: Boolean = A.signed > 0
     val valSign: Boolean = value.signed > 0
-    val resSign: Boolean = (A-value).signed > 0
+    val resSign: Boolean = (A-value-carry).signed > 0
+
     OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
-    CF = A.toInt - value.toInt < 0
+    CF = (A.toInt - value.toInt - carry.toInt) < 0
 
     A = A - value
     updateZN(A)
