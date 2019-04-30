@@ -31,7 +31,7 @@ class Reg6502 private(){
     OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
     CF = (value.toInt + A.toInt + carry.toInt) > 255
 
-    A = A + value
+    A = A + value + carry
     updateZN(A)
   }
 
@@ -45,7 +45,7 @@ class Reg6502 private(){
     OF = (aSign && valSign && !resSign) || (!aSign && !valSign && resSign)
     CF = (A.toInt - value.toInt - carry.toInt) < 0
 
-    A = A - value
+    A = A - value - carry
     updateZN(A)
   }
 
