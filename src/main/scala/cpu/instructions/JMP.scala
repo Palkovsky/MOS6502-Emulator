@@ -13,7 +13,7 @@ object JMP_ABS extends Instruction(UByte(0x4c), 3, 3){
   }
 }
 
-object JMP_Indirect extends Instruction(UByte(0x2c), 3, 5){
+object JMP_Indirect extends Instruction(UByte(0x6c), 3, 5){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
     val indirectAddr: UShort = (UShort(args(1).toInt) << 8) + UShort(args.head.toInt)
     val lower: UByte = memory.readFrom(indirectAddr)
