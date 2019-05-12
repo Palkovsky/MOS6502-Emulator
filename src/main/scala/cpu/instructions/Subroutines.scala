@@ -21,7 +21,7 @@ object JSR extends Instruction(UByte(0x20), 3, 6){
     reg.SP -= UByte(2)
 
     val subAddr: UShort = (UShort(subAddrUpper.toInt) << 8) + UShort(subAddrLower.toInt)
-    reg.PC = subAddr
+    reg.PC = subAddr - UShort(size)
   }
 }
 

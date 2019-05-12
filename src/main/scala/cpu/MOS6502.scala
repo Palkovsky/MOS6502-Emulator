@@ -1,5 +1,6 @@
 package cpu
 
+import instructions.BRK
 import bitwise.Bitwise
 import spire.math.{UByte, UShort}
 
@@ -29,6 +30,9 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
 
       maybeInstruction match {
         case None              => throw new InvalidOpcodeException(s"Invalid opcode 0x${opcode.toInt.toHexString} at 0x${reg.PC.toInt.toHexString}")
+        case Some(BRK) =>
+          println(s"BRK at (0x${reg.PC.toInt.toHexString})")
+          return
         case Some(instruction) =>
           val args: Seq[UByte] = for(i <- 1 until instruction.size) yield memory.readFrom(reg.PC + UShort(i))
           //println(s"Executing ${instruction.opcode.toInt.toHexString}(0x${reg.PC.toInt.toHexString}) Args: $args")

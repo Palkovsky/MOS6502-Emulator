@@ -50,7 +50,8 @@ object Main extends App {
   cpuThread.setDaemon(true)
   cpuThread.start()
 
-  Thread.sleep(1000)
+  System.in.read()
+  //cpuThread.join()
 }
 
 /*
