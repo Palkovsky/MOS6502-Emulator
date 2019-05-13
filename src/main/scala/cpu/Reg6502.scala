@@ -57,6 +57,7 @@ class Reg6502 private(){
 
   // Sets status flag for CMP, CPX, CPY operation
   def updateCMP(valA: UByte, valB: UByte): Unit = {
+    //println(s"CMP ${valA} to ${valB}.")
     CF = valA >= valB
     updateZN(valA - valB)
   }

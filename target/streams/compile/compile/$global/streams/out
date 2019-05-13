@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/dawid/Desktop/MOS6502-Emulator/src/main/scala/io/Device.scala:5:22: traits or objects may not have parameters[0m
+[0m[[0m[31merror[0m] [0m[0mabstract trait Device(cpu: MOS6502) extends Runnable[0m
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

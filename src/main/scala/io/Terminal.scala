@@ -2,12 +2,13 @@ package io
 
 import spire.math.UByte
 
+import cpu.MOS6502
 
 /*
  * Ports - two byte array.
  * First element is for output, second for reading data from terminal
  */
-class Terminal private() extends Runnable{
+class Terminal private(cpu: MOS6502) extends Device{
 
   val ports: Array[UByte] = Array(UByte(0), UByte(0))
 
@@ -29,5 +30,5 @@ class Terminal private() extends Runnable{
 }
 
 object Terminal{
-  def apply(): Terminal = new Terminal()
+  def apply(cpu: MOS6502): Terminal = new Terminal(cpu)
 }

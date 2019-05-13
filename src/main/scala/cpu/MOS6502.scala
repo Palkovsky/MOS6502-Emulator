@@ -22,61 +22,68 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
   private var irqFlag: Boolean = false
   private var nmiFlag: Boolean = false
   private var rstFlag: Boolean = false
+  private var haltFlag: Boolean = false
 
   def run(): Unit = {
     while(true){
-      val opcode: UByte = memory.readFrom(reg.PC)
-      val maybeInstruction: Option[Instruction] = InstructionSet.lookup(opcode)
+      if(!haltFlag){
+        val opcode: UByte = memory.readFrom(reg.PC)
+        val maybeInstruction: Option[Instruction] = InstructionSet.lookup(opcode)
 
-      maybeInstruction match {
-        case None              => throw new InvalidOpcodeException(s"Invalid opcode 0x${opcode.toInt.toHexString} at 0x${reg.PC.toInt.toHexString}")
-        case Some(BRK) =>
-          println(s"BRK at (0x${reg.PC.toInt.toHexString})")
-          return
-        case Some(instruction) =>
-          val args: Seq[UByte] = for(i <- 1 until instruction.size) yield memory.readFrom(reg.PC + UShort(i))
-          //println(s"Executing ${instruction.opcode.toInt.toHexString}(0x${reg.PC.toInt.toHexString}) Args: $args")
-          instruction.execute(memory, reg, args:_*)
-          cycles = cycles + instruction.cycles
-          reg.PC = reg.PC + UShort(instruction.size)
-      }
+        maybeInstruction match {
+          case None              => throw new InvalidOpcodeException(s"Invalid opcode 0x${opcode.toInt.toHexString} at 0x${reg.PC.toInt.toHexString}")
+          case Some(BRK) =>
+            println(s"BRK at (0x${reg.PC.toInt.toHexString})")
+            return
+          case Some(instruction) =>
+            val args: Seq[UByte] = for(i <- 1 until instruction.size) yield memory.readFrom(reg.PC + UShort(i))
+            //println(s"Executing ${instruction.opcode.toInt.toHexString}(0x${reg.PC.toInt.toHexString}) Args: $args")
+            instruction.execute(memory, reg, args:_*)
+            cycles = cycles + instruction.cycles
+            reg.PC = reg.PC + UShort(instruction.size)
+        }
 
-      // Check for non-maskable interrupt
-      if(nmiFlag){
-        handleInterrupt(MOS6502.NMI_IVT)
-        nmiFlag = false
-      }
+        // Check for non-maskable interrupt
+        if(nmiFlag){
+          handleInterrupt(MOS6502.NMI_IVT)
+          nmiFlag = false
+        }
 
-      // Check for interrupt request
-      if(irqFlag){
-        handleInterrupt(MOS6502.IRQ_IVT)
-        irqFlag = false
-      }
+        // Check for interrupt request
+        if(irqFlag){
+          handleInterrupt(MOS6502.IRQ_IVT)
+          irqFlag = false
+        }
 
-      // Check if reset requested
-      if(rstFlag){
-        reg.reset()
-        reg.ID = true
-        val newPcLower: UByte = memory.readFrom(MOS6502.RST_IVT)
-        val newPcUpper: UByte = memory.readFrom(MOS6502.RST_IVT + UShort(1))
-        reg.PC = Bitwise.word(newPcLower, newPcUpper)
-        cycles += 6
-        rstFlag = false
+        // Check if reset requested
+        if(rstFlag){
+          reg.reset()
+          reg.ID = true
+          val newPcLower: UByte = memory.readFrom(MOS6502.RST_IVT)
+          val newPcUpper: UByte = memory.readFrom(MOS6502.RST_IVT + UShort(1))
+          reg.PC = Bitwise.word(newPcLower, newPcUpper)
+          cycles += 6
+          rstFlag = false
+        }
       }
     }
   }
 
-  def irq(): Unit = {
+  def irq(flag: Boolean): Unit = {
     if(reg.ID) return
-    irqFlag = true
+    irqFlag = flag
   }
 
-  def nmi(): Unit = {
-    nmiFlag = true
+  def nmi(flag: Boolean): Unit = {
+    nmiFlag = flag
   }
 
-  def reset(): Unit = {
-    rstFlag = true
+  def reset(flag: Boolean): Unit = {
+    rstFlag = flag
+  }
+
+  def halt(flag: Boolean): Unit = {
+    haltFlag = flag
   }
 
   /*

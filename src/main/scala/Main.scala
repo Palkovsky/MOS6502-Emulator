@@ -37,15 +37,15 @@ object Main extends App {
   // IVT - IRQ/BRK
   memoryMap.mapMemory(CODE_SEGMENT, Array[UByte](UByte(0x00), UByte(0x20)), UShort(0xFFFE))
 
-  // Terminal device
-  val tty: Terminal = Terminal()
+  // Initialize devices
+  val cpu = MOS6502(memoryMap, codeBasePtr)
+  val tty: Terminal = Terminal(cpu)
   memoryMap.mapMemory(IO_SEGMENT, tty.ports, UShort(0x0100))
 
   val ttyThread = new Thread(tty)
   ttyThread.setDaemon(true)
   ttyThread.start()
 
-  val cpu = MOS6502(memoryMap, codeBasePtr)
   val cpuThread = new Thread(cpu)
   cpuThread.setDaemon(true)
   cpuThread.start()
