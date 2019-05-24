@@ -1,4 +1,4 @@
-package bitwise
+package helpers
 
 import spire.math.{UByte, UShort}
 

@@ -1,7 +1,7 @@
 import java.nio.file.{Files, Paths}
 
 import cpu._
-import io.Terminal
+import io.{Monitor, Screen, Keyboard}
 import spire.math.{UByte, UShort}
 
 /*
@@ -39,19 +39,33 @@ object Main extends App {
 
   // Initialize devices
   val cpu = MOS6502(memoryMap, codeBasePtr)
-  val tty: Terminal = Terminal(cpu)
-  memoryMap.mapMemory(IO_SEGMENT, tty.ports, UShort(0x0100))
+  val screen: Screen = Screen(cpu)
+  val monitor: Monitor = Monitor(cpu)
+  val keyboard: Keyboard = Keyboard(cpu)
 
-  val ttyThread = new Thread(tty)
-  ttyThread.setDaemon(true)
-  ttyThread.start()
+  memoryMap.mapMemory(IO_SEGMENT, screen.ports, UShort(0x0100))
+  memoryMap.mapMemory(IO_SEGMENT, monitor.ports, UShort(0x0110))
+  memoryMap.mapMemory(IO_SEGMENT, keyboard.ports, UShort(0x0120))
+
+  val screenThread = new Thread(screen)
+  screenThread.setDaemon(true)
+  screenThread.start()
+
+  val keyboardThread = new Thread(keyboard)
+  keyboardThread.setDaemon(true)
+  keyboardThread.start()
+
+  val monitorThread = new Thread(monitor)
+  monitorThread.setDaemon(true)
+  monitorThread.start()
 
   val cpuThread = new Thread(cpu)
-  cpuThread.setDaemon(true)
   cpuThread.start()
 
-  System.in.read()
-  //cpuThread.join()
+  cpuThread.join()
+  screenThread.interrupt()
+  keyboardThread.interrupt()
+  monitorThread.interrupt()
 }
 
 /*

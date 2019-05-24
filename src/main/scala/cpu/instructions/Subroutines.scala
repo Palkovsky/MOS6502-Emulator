@@ -1,6 +1,6 @@
 package cpu.instructions
 
-import bitwise.Bitwise
+import helpers.Bitwise
 import cpu.{Instruction, MemoryMap, Reg6502}
 import spire.math.{UByte, UShort}
 
@@ -51,6 +51,6 @@ object RTI extends Instruction(UByte(0x40), 1, 6){
 
     reg.updateStatus(status)
     val retAddr: UShort = Bitwise.word(retLower, retUpper)
-    reg.PC = retAddr
+    reg.PC = retAddr - UShort(1)
   }
 }

@@ -1,7 +1,7 @@
 package cpu
 
 import instructions.BRK
-import bitwise.Bitwise
+import helpers.{Bitwise, Logger}
 import spire.math.{UByte, UShort}
 
 object MOS6502{
@@ -18,11 +18,12 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
   reg.PC = codePtr
 
   private var cycles: Long = 0
-
   private var irqFlag: Boolean = false
   private var nmiFlag: Boolean = false
   private var rstFlag: Boolean = false
   private var haltFlag: Boolean = false
+
+  private val logger: Logger = Logger.empty()
 
   def run(): Unit = {
     while(true){
@@ -32,12 +33,11 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
 
         maybeInstruction match {
           case None              => throw new InvalidOpcodeException(s"Invalid opcode 0x${opcode.toInt.toHexString} at 0x${reg.PC.toInt.toHexString}")
-          case Some(BRK) =>
-            println(s"BRK at (0x${reg.PC.toInt.toHexString})")
-            return
           case Some(instruction) =>
             val args: Seq[UByte] = for(i <- 1 until instruction.size) yield memory.readFrom(reg.PC + UShort(i))
-            //println(s"Executing ${instruction.opcode.toInt.toHexString}(0x${reg.PC.toInt.toHexString}) Args: $args")
+
+            logger(s"Executing ${instruction.opcode.toInt.toHexString}(0x${reg.PC.toInt.toHexString}) Args: $args")
+
             instruction.execute(memory, reg, args:_*)
             cycles = cycles + instruction.cycles
             reg.PC = reg.PC + UShort(instruction.size)
@@ -51,12 +51,16 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
 
         // Check for interrupt request
         if(irqFlag){
+          logger(s"IRQ!")
           handleInterrupt(MOS6502.IRQ_IVT)
           irqFlag = false
         }
 
         // Check if reset requested
         if(rstFlag){
+          logger(s"Reset signal. Stopping...")
+          return
+          /*
           reg.reset()
           reg.ID = true
           val newPcLower: UByte = memory.readFrom(MOS6502.RST_IVT)
@@ -64,26 +68,27 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
           reg.PC = Bitwise.word(newPcLower, newPcUpper)
           cycles += 6
           rstFlag = false
+           */
         }
       }
     }
   }
 
-  def irq(flag: Boolean): Unit = {
+  def irq(): Unit = {
     if(reg.ID) return
-    irqFlag = flag
+    irqFlag = true
   }
 
-  def nmi(flag: Boolean): Unit = {
-    nmiFlag = flag
+  def nmi(): Unit = {
+    nmiFlag = true
   }
 
-  def reset(flag: Boolean): Unit = {
-    rstFlag = flag
+  def reset(): Unit = {
+    rstFlag = true
   }
 
-  def halt(flag: Boolean): Unit = {
-    haltFlag = flag
+  def halt(): Unit = {
+    haltFlag = true
   }
 
   /*

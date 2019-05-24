@@ -1,6 +1,6 @@
 package cpu.instructions
 
-import bitwise.Bitwise
+import helpers.Bitwise
 import cpu.{Instruction, MOS6502, MemoryMap, Reg6502}
 import spire.math.{UByte, UShort}
 

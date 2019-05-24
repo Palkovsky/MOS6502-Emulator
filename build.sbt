@@ -1,5 +1,5 @@
 name := "MOS6502-Emulator"
 version := "0.1"
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.7"
 
 libraryDependencies += "org.typelevel" %% "spire" % "0.14.1"

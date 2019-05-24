@@ -2,4 +2,4 @@ package io
 
 import cpu.MOS6502
 
-abstract trait Device extends Runnable
+abstract class Device(cpu: MOS6502) extends Runnable
