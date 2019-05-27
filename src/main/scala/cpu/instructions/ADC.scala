@@ -6,7 +6,7 @@ import spire.math.UByte
 /**
   * ADC - 8 instructions
   */
-abstract trait ADC_Base extends Instruction{
+trait ADC_Base extends Instruction{
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit =
     reg.performADC(Addressing(addressing, memory, reg, args))
 }
