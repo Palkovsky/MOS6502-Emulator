@@ -3,7 +3,8 @@ package cpu
 import spire.math.{UByte, UShort}
 
 object AddressingType extends Enumeration {
-  val ZP, ZP_X, ZP_Y, ABS, ABS_X, ABS_Y, INDIRECT, INDIRECT_X, INDIRECT_Y = Value
+  type AddressingType = Value
+  val IMPL, IMM, ACC, ZP, ZP_X, ZP_Y, ABS, ABS_X, ABS_Y, INDIRECT, INDIRECT_X, INDIRECT_Y = Value
 }
 
 object Addressing {
@@ -11,7 +12,9 @@ object Addressing {
   def apply(t: AddressingType.Value, memory: MemoryMap, reg: Reg6502, args: Seq[UByte]): UByte = get(t, memory, reg, args)
 
   def get(t: AddressingType.Value, memory: MemoryMap, reg: Reg6502, args: Seq[UByte]): UByte = t match {
-    case AddressingType.ZP   => memory.readFrom(args.head)
+    case AddressingType.IMM => args.head
+    case AddressingType.ACC => reg.A
+    case AddressingType.ZP  => memory.readFrom(args.head)
     case AddressingType.ZP_X => memory.readFrom(args.head + reg.X)
     case AddressingType.ZP_Y => memory.readFrom(args.head + reg.Y)
     case AddressingType.ABS =>
@@ -36,6 +39,7 @@ object Addressing {
   }
 
   def write(t: AddressingType.Value, memory: MemoryMap, reg: Reg6502, args: Seq[UByte], value: UByte): Unit = t match {
+    case AddressingType.ACC => reg.A = value
     case AddressingType.ZP => memory.writeTo(args.head, value)
     case AddressingType.ZP_X => memory.writeTo(args.head + reg.X, value)
     case AddressingType.ZP_Y => memory.writeTo(args.head + reg.Y, value)

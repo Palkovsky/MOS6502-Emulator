@@ -12,8 +12,8 @@ buff:
 }
 
 CODE {
-    LDX #$FF                    ; Init stack ptr to $FF
-	TXS                         ; - || -
+  LDX #$FF
+	TXS
 
 WAIT:
     LDA flag
@@ -21,7 +21,7 @@ WAIT:
     BCC *WAIT
 
     JMP EXIT
-    
+
 PRINT:
     LDY #0
 PRINT_LOOP:

@@ -1,13 +1,13 @@
 package cpu.instructions
 
 import helpers.Bitwise
-import cpu.{Instruction, MOS6502, MemoryMap, Reg6502}
+import cpu._
 import spire.math.{UByte, UShort}
 
 /*
  * BRK defines software interrupt.
  */
-object BRK extends Instruction(UByte(0x00), 1, 7){
+object BRK extends Instruction(UByte(0x00), 1, 7, AddressingType.IMPL){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
     reg.BC = true
 

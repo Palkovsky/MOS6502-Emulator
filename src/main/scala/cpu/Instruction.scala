@@ -4,6 +4,9 @@ import cpu.instructions._
 import spire.math.UByte
 
 class InvalidOpcodeException(msg: String) extends Exception(msg)
+abstract class Instruction protected(val opcode: UByte, val size: Int, val cycles: Int, val addressing: AddressingType.Value){
+  def execute(memory: MemoryMap, reg: Reg6502, args:UByte*): Unit
+}
 
 object InstructionSet {
   val instructions: Seq[Instruction] = List(
@@ -37,17 +40,8 @@ object InstructionSet {
     STX_ZP, STX_ZP_Y, STX_ABS,
     STY_ZP, STY_ZP_X, STY_ABS
   )
-
   val instructionsMap: Map[UByte, Instruction] = (instructions.map(inst => inst.opcode) zip instructions).toMap
-
   def lookup(opcode: UByte): Option[Instruction] = instructionsMap.get(opcode)
 }
-
-trait Executable {
-  def execute(memory: MemoryMap, reg: Reg6502, args:UByte*): Unit
-}
-
-abstract class Instruction protected(val opcode: UByte, val size: Int, val cycles: Int) extends Executable
-
 
 

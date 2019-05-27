@@ -34,8 +34,8 @@ object Main extends App {
   // Code segment
   memoryMap.mapMemory(CODE_SEGMENT, code, codeBasePtr)
 
-  // IVT - IRQ/BRK
-  memoryMap.mapMemory(CODE_SEGMENT, Array[UByte](UByte(0x00), UByte(0x20)), UShort(0xFFFE))
+  // IVT
+  memoryMap.mapMemory(CODE_SEGMENT, Array.fill(6)(UByte(0x00)), UShort(0xFFFA))
 
   // Initialize devices
   val cpu = MOS6502(memoryMap, codeBasePtr)

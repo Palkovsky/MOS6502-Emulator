@@ -1,13 +1,13 @@
 package cpu.instructions
 
 import helpers.Bitwise
-import cpu.{Instruction, MemoryMap, Reg6502}
+import cpu._
 import spire.math.{UByte, UShort}
 
 /**
   * JSR - Jump to subroutine
   */
-object JSR extends Instruction(UByte(0x20), 3, 6){
+object JSR extends Instruction(UByte(0x20), 3, 6, AddressingType.ABS){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
     val subAddrLower: UByte = args(0)
     val subAddrUpper: UByte = args(1)
@@ -28,7 +28,7 @@ object JSR extends Instruction(UByte(0x20), 3, 6){
 /**
   * RTS - Return from subroutine
   */
-object RTS extends Instruction(UByte(0x60), 1, 6){
+object RTS extends Instruction(UByte(0x60), 1, 6, AddressingType.IMPL){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
     val retLower = memory.readFrom(reg.SP + UByte(1))
     val retUpper = memory.readFrom(reg.SP + UByte(2))
@@ -42,7 +42,7 @@ object RTS extends Instruction(UByte(0x60), 1, 6){
 /**
   * RTI - Return from interrupt
   */
-object RTI extends Instruction(UByte(0x40), 1, 6){
+object RTI extends Instruction(UByte(0x40), 1, 6, AddressingType.IMPL){
   override def execute(memory: MemoryMap, reg: Reg6502, args: UByte*): Unit = {
     val status = memory.readFrom(reg.SP + UByte(1))
     val retLower = memory.readFrom(reg.SP + UByte(2))
