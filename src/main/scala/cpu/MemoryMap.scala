@@ -25,7 +25,8 @@ class MemoryMap {
   def writeTo(addr: UShort, value: UByte): Unit = findByAddr(addr) match {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
-      if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: 0x${addr.toInt.toHexString}")
+      if (relativeAddr >= region.size)
+        throw new IllegalAccessException(s"Tried accessing unavailable memory region at: 0x${addr.toInt.toHexString}")
       bytes synchronized {
         bytes.update(relativeAddr.toInt, value)
       }
@@ -37,7 +38,9 @@ class MemoryMap {
     case (region, bytes) =>
       val relativeAddr = addr-region.start
       if (relativeAddr >= region.size) throw new IllegalAccessException(s"Tried accessing unavailable memory region at: 0x${addr.toInt.toHexString}")
-      bytes(relativeAddr.toInt)
+      bytes synchronized {
+        bytes(relativeAddr.toInt)
+      }
   }
 
   def readFrom(addr: UByte): UByte = readFrom(UShort(addr.toInt))

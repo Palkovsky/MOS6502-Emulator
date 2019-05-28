@@ -34,7 +34,8 @@ object Addressing {
     case AddressingType.INDIRECT_Y =>
       val lower: UByte  = memory.readFrom(args.head)
       val upper: UByte  = memory.readFrom(args.head + UByte(1))
-      val addr:  UShort = (UShort(upper.toInt) << 8) + UShort(lower.toInt) + UShort(reg.Y.toInt)
+      val addr:  UShort =
+        (UShort(upper.toInt) << 8) + UShort(lower.toInt) + UShort(reg.Y.toInt)
       memory.readFrom(addr)
   }
 

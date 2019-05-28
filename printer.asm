@@ -1,7 +1,7 @@
 ORG $1000
 
 define TTY_OUT $0100
-define TTY_IN $0120    
+define TTY_IN $0120
 define CPU_STOP $0110
 
 DATA {

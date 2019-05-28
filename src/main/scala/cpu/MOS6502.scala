@@ -99,14 +99,14 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
     val status: UByte = reg.status()
     val pcLower: UByte = Bitwise.lower(reg.PC)
     val pcUpper: UByte = Bitwise.upper(reg.PC)
+    val newPcLower: UByte = memory.readFrom(ivtAddr)
+    val newPcUpper: UByte = memory.readFrom(ivtAddr + UShort(1))
 
     memory.writeTo(reg.SP, pcUpper)
     memory.writeTo(reg.SP - UByte(1), pcLower)
     memory.writeTo(reg.SP - UByte(2), status)
     reg.SP -= UByte(3)
 
-    val newPcLower: UByte = memory.readFrom(ivtAddr)
-    val newPcUpper: UByte = memory.readFrom(ivtAddr + UShort(1))
     reg.PC = Bitwise.word(newPcLower, newPcUpper)
   }
 }

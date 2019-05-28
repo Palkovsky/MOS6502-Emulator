@@ -7,11 +7,11 @@ import cpu.MOS6502
 /*
  * Ports
  *  0 - byte to print
- *  1 - print mode
+ *  1 - char displayed
  */
 class Screen(cpu: MOS6502) extends Device(cpu) {
 
-  val ports: Array[UByte] = Array(UByte(0), UByte(1))
+  val ports: Array[UByte] = Array(UByte(0))
 
   override def run(): Unit = {
 
