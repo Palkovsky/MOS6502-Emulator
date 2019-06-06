@@ -12,7 +12,7 @@ object JSR extends Instruction(UByte(0x20), 3, 6, AddressingType.ABS){
     val subAddrLower: UByte = args(0)
     val subAddrUpper: UByte = args(1)
 
-    val retAddr: UShort = reg.PC + UShort(2)
+    val retAddr: UShort = reg.PC + UShort(3)
     val retLower: UByte = Bitwise.lower(retAddr)
     val retUpper: UByte = Bitwise.upper(retAddr)
 
@@ -35,7 +35,7 @@ object RTS extends Instruction(UByte(0x60), 1, 6, AddressingType.IMPL){
     reg.SP += UByte(2)
 
     val retAddr: UShort = Bitwise.word(retLower, retUpper)
-    reg.PC = retAddr
+    reg.PC = retAddr - UShort(1)
   }
 }
 

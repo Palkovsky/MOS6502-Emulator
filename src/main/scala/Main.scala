@@ -62,7 +62,7 @@ object Main extends App {
   val cpuThread = new Thread(cpu)
   cpuThread.start()
 
-  cpuThread.join()
+  cpuThread.join(10000)
   screenThread.interrupt()
   keyboardThread.interrupt()
   monitorThread.interrupt()

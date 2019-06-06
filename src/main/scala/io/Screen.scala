@@ -18,7 +18,7 @@ class Screen(cpu: MOS6502) extends Device(cpu) {
     while(true) ports.synchronized {
       if(Thread.interrupted()) return
       if (ports(0) != UByte(0)) {
-        println(s"TERMINAL MSG: ${ports(0).toChar}")
+        print(s"${ports(0).toChar}")
         ports(0) = UByte(0)
       }
     }

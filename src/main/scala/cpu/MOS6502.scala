@@ -18,16 +18,16 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
   reg.PC = codePtr
 
   private var cycles: Long = 0
-  private var irqFlag: Boolean = false
-  private var nmiFlag: Boolean = false
-  private var rstFlag: Boolean = false
-  private var haltFlag: Boolean = false
+  @volatile private var irqFlag: Boolean = false
+  @volatile private var nmiFlag: Boolean = false
+  @volatile private var rstFlag: Boolean = false
+  @volatile private var haltFlag: Boolean = false
 
   private val logger: Logger = Logger.empty()
 
   def run(): Unit = {
     while(true){
-      if(!haltFlag){
+      if(haltFlag == false){
         val opcode: UByte = memory.readFrom(reg.PC)
         val maybeInstruction: Option[Instruction] = InstructionSet.lookup(opcode)
 
@@ -87,8 +87,8 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
     rstFlag = true
   }
 
-  def halt(): Unit = {
-    haltFlag = true
+  def halt(value: Boolean): Unit = {
+    haltFlag = value
   }
 
   /*
