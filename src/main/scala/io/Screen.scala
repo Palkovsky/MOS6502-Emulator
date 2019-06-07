@@ -4,21 +4,27 @@ import spire.math.UByte
 
 import cpu.MOS6502
 
-/*
- * Ports
- *  0 - byte to print
- *  1 - char displayed
- */
+
 class Screen(cpu: MOS6502) extends Device(cpu) {
 
-  val ports: Array[UByte] = Array(UByte(0))
+  val ports: Array[UByte] = Array(
+    UByte(0), /* BUFFER */
+    UByte(0) /* MODE: 0 for ASCII, non-0 for decimal */
+  )
 
   override def run(): Unit = {
 
-    while(true) ports.synchronized {
+    while(true) {
       if(Thread.interrupted()) return
       if (ports(0) != UByte(0)) {
-        print(s"${ports(0).toChar}")
+
+        if(ports(1) == UByte(0)){
+          print(s"${ports(0).toChar}")
+        }else{
+          println(s"${ports(0).toInt}")
+        }
+
+
         ports(0) = UByte(0)
       }
     }

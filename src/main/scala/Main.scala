@@ -1,7 +1,7 @@
 import java.nio.file.{Files, Paths}
 
 import cpu._
-import io.{Monitor, Screen, Keyboard}
+import io._
 import spire.math.{UByte, UShort}
 
 /*
@@ -42,45 +42,34 @@ object Main extends App {
   val screen: Screen = Screen(cpu)
   val monitor: Monitor = Monitor(cpu)
   val keyboard: Keyboard = Keyboard(cpu)
+  val clock: Clock = Clock(cpu)
 
   memoryMap.mapMemory(IO_SEGMENT, screen.ports, UShort(0x0100))
   memoryMap.mapMemory(IO_SEGMENT, monitor.ports, UShort(0x0110))
   memoryMap.mapMemory(IO_SEGMENT, keyboard.ports, UShort(0x0120))
+  memoryMap.mapMemory(IO_SEGMENT, clock.ports, UShort(0x0130))
 
   val screenThread = new Thread(screen)
-  screenThread.setDaemon(true)
-  screenThread.start()
-
   val keyboardThread = new Thread(keyboard)
-  keyboardThread.setDaemon(true)
-  keyboardThread.start()
-
   val monitorThread = new Thread(monitor)
-  monitorThread.setDaemon(true)
-  monitorThread.start()
-
+  val clockThread = new Thread(clock)
   val cpuThread = new Thread(cpu)
+
+  screenThread.setDaemon(true)
+  keyboardThread.setDaemon(true)
+  monitorThread.setDaemon(true)
+  clockThread.setDaemon(true)
+
+  screenThread.start()
+  keyboardThread.start()
+  monitorThread.start()
+  clockThread.start()
   cpuThread.start()
 
-  cpuThread.join(10000)
+  cpuThread.join()
+
   screenThread.interrupt()
   keyboardThread.interrupt()
   monitorThread.interrupt()
+  clockThread.interrupt()
 }
-
-/*
-  ========== STACK INITIALIZATION =========
-  code(0) = UByte(0xA2) // LDX Imm
-  code(1) = UByte(0xFF)
-  code(2) = UByte(0x9A) // TXS == X=>SP
-  code(3) = UByte(0x00) // BRK
-
-  ========== READING FROM TERMINAL AND OUTPUTTING ==========
-  memoryMap.writeTo(UShort(0x2000), UByte(0xAD)) // LDA 0x0101
-  memoryMap.writeTo(UShort(0x2001), UByte(0x01))
-  memoryMap.writeTo(UShort(0x2002), UByte(0x01))
-  memoryMap.writeTo(UShort(0x2003), UByte(0x8D)) // STA 0x0100
-  memoryMap.writeTo(UShort(0x2004), UByte(0x00))
-  memoryMap.writeTo(UShort(0x2005), UByte(0x01))
-  memoryMap.writeTo(UShort(0x2006), UByte(0x40)) // Return from interrupt
- */

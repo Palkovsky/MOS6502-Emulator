@@ -14,12 +14,14 @@ class Keyboard(cpu: MOS6502) extends Device(cpu){
 
   override def run(): Unit = {
 
-    while(true) ports.synchronized {
+    while(true) {
       if(Thread.interrupted()) return
       try{
         Thread.sleep(2000)
       } catch {
-        case _: InterruptedException => return
+        case _: InterruptedException => {
+          Thread.currentThread().interrupt()
+        }
       }
       ports(0) = UByte(0x43)
       cpu.irq()

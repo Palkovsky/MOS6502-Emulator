@@ -15,7 +15,7 @@ class Monitor(cpu: MOS6502) extends Device(cpu){
   )
 
   override def run(): Unit = {
-    while(true) ports.synchronized {
+    while(true) {
       if(Thread.interrupted()) return
 
       if(ports(0) != UByte(0)){
@@ -25,7 +25,11 @@ class Monitor(cpu: MOS6502) extends Device(cpu){
 
       if(ports(2) != UByte(0) && ports(1) != UByte(0)){
         cpu.halt(true)
-        Thread.sleep(ports(1).toInt*1000)
+        try{
+          Thread.sleep(ports(1).toInt*1000)
+        } catch {
+          case _: InterruptedException => () 
+        }
         cpu.halt(false)
         ports(1) = UByte(0)
         ports(2) = UByte(0)
