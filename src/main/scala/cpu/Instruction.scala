@@ -19,7 +19,7 @@ object InstructionSet {
     ROR_Acc, ROR_ZP, ROR_ZP_X, ROR_ABS, ROR_ABS_X,
     BRK,
     BCC, BCS, BNE, BEQ, BPL, BMI, BVC, BVS,
-    CLS, CLD, CLV, CLD,
+    CLS, CLD, CLI, CLV, CLD,
     SEI, SED, SEC,
     CMP_Imm, CMP_ZP, CMP_ZP_X, CMP_ABS, CMP_ABS_X, CMP_ABS_Y, CMP_Indirect_X, CMP_Indirect_Y,
     CPX_Imm, CPX_ZP, CPX_ABS,

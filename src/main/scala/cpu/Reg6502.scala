@@ -15,7 +15,7 @@ class Reg6502 private(){
   // FLAGS
   var CF: Boolean = false
   var ZF: Boolean = false
-  var ID: Boolean = false
+  var ID: Boolean = true
   var DM: Boolean = false
   var BC: Boolean = false
   var OF: Boolean = false

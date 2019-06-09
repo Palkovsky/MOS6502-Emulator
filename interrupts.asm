@@ -6,7 +6,7 @@ define CPU_STOP $0110
 
 DATA {
 INTERRUPT_COUNT:
-  DB $00
+  DB $0
 INTERRUPT_MAX:
   DB $5
 }
@@ -15,10 +15,11 @@ CODE {
   LDX #$FF                        ; setup stack
 	TXS                             ; - || -
 
-WAIT:
+MAIN:
   LDA INTERRUPT_COUNT           ; how many interrupts handled
   CMP INTERRUPT_MAX             ; check if served maximum allowed number of interrupts
-  BCC *WAIT                     ; if not, wait for it
+  BCC *MAIN                     ; if not, wait for it
+
   JMP EXIT                      ; if yes - start EXIT subroutine
 
 EXIT:
@@ -27,7 +28,7 @@ EXIT:
   JMP EXIT                      ; this will prevent executing data in short period when processor not stopped
 }
 
-IRQ {                           ; Interrupt segment. Defining it will result in overriding IVT before CODE execution.
+IRQ {                                ; Interrupt segment. Defining it will result in overriding IVT before CODE execution.
   LDA TTY_IN                    ; load input char from device register
   STA TTY_OUT                   ; send it to screen
 

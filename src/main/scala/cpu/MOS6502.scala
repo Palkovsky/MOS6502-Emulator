@@ -45,14 +45,14 @@ class MOS6502 private(memory: MemoryMap, codePtr: UShort) extends Runnable{
 
         // Check for non-maskable interrupt
         if(nmiFlag){
-          handleInterrupt(MOS6502.NMI_IVT)
           nmiFlag = false
+          handleInterrupt(MOS6502.NMI_IVT)
         }
 
         // Check for interrupt request
         if(irqFlag){
-          logger(s"IRQ!")
-          handleInterrupt(MOS6502.IRQ_IVT)
+          if(!reg.ID)
+            handleInterrupt(MOS6502.IRQ_IVT)
           irqFlag = false
         }
 
